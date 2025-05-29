@@ -1,0 +1,11 @@
+{
+  "augment.advanced": {
+    "mcpServers": [
+      {
+        "name": "mem0",
+        "command": "curl",
+        "args": ["-N", "http://localhost:8050/sse"]
+      }
+    ]
+  }
+}

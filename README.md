@@ -100,7 +100,50 @@ With stdio, the MCP client iself can spin up the MCP server, so nothing to run a
 
 ### Using Docker
 
-#### SSE Transport
+#### Quick Start with Docker Compose (Recommended)
+
+The easiest way to get started is with **one command**:
+
+**Windows:**
+```bash
+start.bat
+```
+
+**Linux/Mac:**
+```bash
+./start.sh
+```
+
+**Or using Make:**
+```bash
+make start
+```
+
+These scripts will:
+- Create `.env` file if it doesn't exist
+- Start PostgreSQL with pgvector extension on port 5432
+- Start MCP server with SSE transport on port 8050
+- Verify everything is working
+
+The server will be available at `http://localhost:8050/sse`.
+
+**Environment Configuration**: Edit the `.env` file and add your OpenAI API key:
+```bash
+OPENAI_API_KEY=your-openai-api-key-here
+DATABASE_URL=postgresql://mem0user:mem0password@localhost:5432/mem0db
+```
+
+#### Manual Docker Compose
+```bash
+# Clone the repository
+git clone https://github.com/coleam00/mcp-mem0.git
+cd mcp-mem0
+
+# Start the services
+docker-compose up
+```
+
+#### SSE Transport (Manual Docker)
 
 ```bash
 docker run --env-file .env -p:8050:8050 mcp/mem0
@@ -113,6 +156,29 @@ The MCP server will essentially be run as an API endpoint within the container t
 With stdio, the MCP client iself can spin up the MCP server container, so nothing to run at this point.
 
 ## Integration with MCP Clients
+
+### VS Code + Augment (Recommended)
+
+For the best experience with VS Code and Augment:
+
+1. **Start the server**: Run `start.bat` (Windows) or `./start.sh` (Linux/Mac)
+2. **Configure Augment**: Add this to your Augment settings:
+   ```json
+   {
+     "augment.advanced": {
+       "mcpServers": [
+         {
+           "name": "mem0",
+           "command": "curl",
+           "args": ["-N", "http://localhost:8050/sse"]
+         }
+       ]
+     }
+   }
+   ```
+3. **Restart VS Code** to load the configuration
+
+See [VSCODE_SETUP.md](VSCODE_SETUP.md) for detailed instructions.
 
 ### SSE Configuration
 
@@ -142,7 +208,7 @@ Once you have the server running with SSE transport, you can connect to it using
 > ```
 
 > **Note for n8n users**: Use host.docker.internal instead of localhost since n8n has to reach outside of it's own container to the host machine:
-> 
+>
 > So the full URL in the MCP node would be: http://host.docker.internal:8050/sse
 
 Make sure to update the port if you are using a value other than the default 8050.
@@ -178,14 +244,14 @@ Add this server to your MCP configuration for Claude Desktop, Windsurf, or any o
   "mcpServers": {
     "mem0": {
       "command": "docker",
-      "args": ["run", "--rm", "-i", 
-               "-e", "TRANSPORT", 
-               "-e", "LLM_PROVIDER", 
-               "-e", "LLM_BASE_URL", 
-               "-e", "LLM_API_KEY", 
-               "-e", "LLM_CHOICE", 
-               "-e", "EMBEDDING_MODEL_CHOICE", 
-               "-e", "DATABASE_URL", 
+      "args": ["run", "--rm", "-i",
+               "-e", "TRANSPORT",
+               "-e", "LLM_PROVIDER",
+               "-e", "LLM_BASE_URL",
+               "-e", "LLM_API_KEY",
+               "-e", "LLM_CHOICE",
+               "-e", "EMBEDDING_MODEL_CHOICE",
+               "-e", "DATABASE_URL",
                "mcp/mem0"],
       "env": {
         "TRANSPORT": "stdio",

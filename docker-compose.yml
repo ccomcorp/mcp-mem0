@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    environment:
+      POSTGRES_DB: mem0db
+      POSTGRES_USER: mem0user
+      POSTGRES_PASSWORD: mem0password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mem0user -d mem0db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mcp-mem0:
+    build:
+      context: .
+      args:
+        PORT: 8050
+    ports:
+      - "8050:8050"
+    environment:
+      - TRANSPORT=sse
+      - HOST=0.0.0.0
+      - PORT=8050
+      - LLM_PROVIDER=openai
+      - LLM_BASE_URL=https://api.openai.com/v1
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_CHOICE=gpt-4o-mini
+      - EMBEDDING_MODEL_CHOICE=text-embedding-3-small
+      - DATABASE_URL=postgresql://mem0user:mem0password@postgres:5432/mem0db
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
