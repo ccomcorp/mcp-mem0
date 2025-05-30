@@ -11,9 +11,17 @@ dependencies = [
     "vecs>=0.4.5"
 ]
 
+[project.scripts]
+mem0-mcp = "main:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [tool.mcp]
 command = "python"
 args = ["main.py"]
+type = "python"
 
 [tool.mcp.env]
 TRANSPORT = "stdio"
