@@ -60,7 +60,7 @@ The server provides three essential memory management tools:
 
 1. Build the Docker image:
    ```bash
-   docker build -t mcp/mem0 --build-arg PORT=8050 .
+   docker build -t mcp/mem0 .
    ```
 
 2. Create a `.env` file based on `.env.example` and configure your environment variables
@@ -71,15 +71,13 @@ The following environment variables can be configured in your `.env` file:
 
 | Variable | Description | Default Value |
 |----------|-------------|---------------|
-| `TRANSPORT` | Transport protocol (sse or stdio) | `stdio` |
-| `HOST` | Host to bind to when using SSE transport | `0.0.0.0` |
-| `PORT` | Port to listen on when using SSE transport | `8050` |
-| `LLM_PROVIDER` | LLM provider (openai, openrouter, or ollama) | `openai` |
-| `LLM_BASE_URL` | Base URL for the LLM API | `https://api.openai.com/v1` |
-| `LLM_API_KEY` | API key for the LLM provider | `sk-your-openai-api-key-here` |
-| `LLM_CHOICE` | LLM model to use | `gpt-4o-mini` |
-| `EMBEDDING_MODEL_CHOICE` | Embedding model to use | `text-embedding-3-small` |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://mem0user:mem0password@localhost:5432/mem0db` |
+| TRANSPORT | Transport protocol (sse or stdio) | stdio |
+| LLM_PROVIDER | LLM provider (openai, openrouter, or ollama) | openai |
+| LLM_BASE_URL | Base URL for the LLM API | https://api.openai.com/v1 |
+| LLM_API_KEY | API key for the LLM provider | sk-your-openai-api-key-here |
+| LLM_CHOICE | LLM model to use | gpt-4o-mini |
+| EMBEDDING_MODEL_CHOICE | Embedding model to use | text-embedding-3-small |
+| DATABASE_URL | PostgreSQL connection string | postgresql://mem0user:mem0password@localhost:5432/mem0db |
 
 ## Running the Server
 
@@ -92,7 +90,7 @@ The following environment variables can be configured in your `.env` file:
 uv run src/main.py
 ```
 
-The MCP server will essentially be run as an API endpoint that you can then connect to with config shown below.
+The MCP server will be run as an endpoint that you can then connect to with config shown below.
 
 #### Stdio Transport
 
@@ -126,7 +124,7 @@ The smart startup script will:
 - ✅ Provide clear status information
 - ✅ Test server connectivity
 
-The server will be available at `http://localhost:8050/sse`.
+The server will be available at the configured endpoint.
 
 #### Smart Startup Benefits
 
@@ -136,9 +134,9 @@ The server will be available at `http://localhost:8050/sse`.
 - **🛡️ Safe Operation:** Won't create duplicate containers
 - **⚡ Efficient:** Only rebuilds when code or config changes
 
-**Environment Configuration**: Edit the `.env` file and add your OpenAI API key:
+**Environment Configuration**: Edit the `.env` file and configure your environment:
 ```bash
-OPENAI_API_KEY=your-openai-api-key-here
+LLM_API_KEY=sk-your-openai-api-key-here
 DATABASE_URL=postgresql://mem0user:mem0password@localhost:5432/mem0db
 ```
 
@@ -158,7 +156,7 @@ docker-compose up
 docker run --env-file .env -p:8050:8050 mcp/mem0
 ```
 
-The MCP server will essentially be run as an API endpoint within the container that you can then connect to with config shown below.
+The MCP server will be run within the container that you can then connect to with config shown below.
 
 #### Stdio Transport
 
@@ -226,23 +224,8 @@ Once you have the server running with SSE transport, you can connect to it using
 }
 ```
 
-> **Note for Windsurf users**: Use `serverUrl` instead of `url` in your configuration:
-> ```json
-> {
->   "mcpServers": {
->     "mem0": {
->       "transport": "sse",
->       "serverUrl": "http://localhost:8050/sse"
->     }
->   }
-> }
-> ```
-
-> **Note for n8n users**: Use host.docker.internal instead of localhost since n8n has to reach outside of it's own container to the host machine:
->
-> So the full URL in the MCP node would be: http://host.docker.internal:8050/sse
-
-Make sure to update the port if you are using a value other than the default 8050.
+> **Note for Windsurf users**: Use `serverUrl` instead of `url` in your configuration.
+> **Note for n8n users**: Use host.docker.internal instead of localhost for container access.
 
 ### Python with Stdio Configuration
 
