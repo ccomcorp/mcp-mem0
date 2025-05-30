@@ -69,17 +69,17 @@ The server provides three essential memory management tools:
 
 The following environment variables can be configured in your `.env` file:
 
-| Variable | Description | Example |
-|----------|-------------|----------|
-| `TRANSPORT` | Transport protocol (sse or stdio) | `sse` |
+| Variable | Description | Default Value |
+|----------|-------------|---------------|
+| `TRANSPORT` | Transport protocol (sse or stdio) | `stdio` |
 | `HOST` | Host to bind to when using SSE transport | `0.0.0.0` |
 | `PORT` | Port to listen on when using SSE transport | `8050` |
 | `LLM_PROVIDER` | LLM provider (openai, openrouter, or ollama) | `openai` |
 | `LLM_BASE_URL` | Base URL for the LLM API | `https://api.openai.com/v1` |
-| `LLM_API_KEY` | API key for the LLM provider | `sk-...` |
+| `LLM_API_KEY` | API key for the LLM provider | `sk-your-openai-api-key-here` |
 | `LLM_CHOICE` | LLM model to use | `gpt-4o-mini` |
 | `EMBEDDING_MODEL_CHOICE` | Embedding model to use | `text-embedding-3-small` |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@host:port/db` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://mem0user:mem0password@localhost:5432/mem0db` |
 
 ## Running the Server
 
@@ -168,21 +168,25 @@ With stdio, the MCP client iself can spin up the MCP server container, so nothin
 
 ### MCP Dockmaster
 
-For easy setup with MCP Dockmaster:
+For easy setup with MCP Dockmaster, use these exact configuration values:
 
-1. **Import this repository** into MCP Dockmaster using the GitHub URL: `https://github.com/ccomcorp/mcp-mem0`
-2. **Configure environment variables** in MCP Dockmaster:
-   - **TRANSPORT**: `stdio`
-   - **LLM_PROVIDER**: `openai`
-   - **LLM_BASE_URL**: `https://api.openai.com/v1`
-   - **LLM_API_KEY**: Your OpenAI API key (starts with `sk-`)
-   - **LLM_CHOICE**: `gpt-4o-mini`
-   - **EMBEDDING_MODEL_CHOICE**: `text-embedding-3-small`
-   - **DATABASE_URL**: `postgresql://mem0user:mem0password@localhost:5432/mem0db`
-3. **Set Command**: `python`
-4. **Set Arguments**: `main.py`
+**Repository URL**: `https://github.com/ccomcorp/mcp-mem0`
 
-The server should start successfully and show "3 tools available" when properly configured.
+**Command**: `python`
+**Arguments**: `main.py`
+
+**Environment Variables**:
+```
+TRANSPORT=stdio
+LLM_PROVIDER=openai
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_API_KEY=sk-your-openai-api-key-here
+LLM_CHOICE=gpt-4o-mini
+EMBEDDING_MODEL_CHOICE=text-embedding-3-small
+DATABASE_URL=postgresql://mem0user:mem0password@localhost:5432/mem0db
+```
+
+**Expected Result**: Server status should show "Running" with "3 tools available".
 
 ### VS Code + Augment (Recommended)
 
