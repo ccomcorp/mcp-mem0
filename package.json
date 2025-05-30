@@ -3,8 +3,22 @@
   "version": "0.1.0",
   "description": "MCP server for integrating long term memory into AI agents with Mem0",
   "main": "main.py",
+  "bin": {
+    "mem0-mcp": "main.py"
+  },
   "scripts": {
     "start": "python main.py"
+  },
+  "command": "python",
+  "args": ["main.py"],
+  "env": {
+    "TRANSPORT": "stdio",
+    "LLM_PROVIDER": "openai",
+    "LLM_BASE_URL": "https://api.openai.com/v1",
+    "LLM_API_KEY": "sk-your-openai-api-key-here",
+    "LLM_CHOICE": "gpt-4o-mini",
+    "EMBEDDING_MODEL_CHOICE": "text-embedding-3-small",
+    "DATABASE_URL": "postgresql://mem0user:mem0password@localhost:5432/mem0db"
   },
   "mcp": {
     "command": "python",
