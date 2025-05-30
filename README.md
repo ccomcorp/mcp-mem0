@@ -166,6 +166,24 @@ With stdio, the MCP client iself can spin up the MCP server container, so nothin
 
 ## Integration with MCP Clients
 
+### MCP Dockmaster
+
+For easy setup with MCP Dockmaster:
+
+1. **Import this repository** into MCP Dockmaster using the GitHub URL: `https://github.com/ccomcorp/mcp-mem0`
+2. **Configure environment variables** in MCP Dockmaster:
+   - **TRANSPORT**: `stdio`
+   - **LLM_PROVIDER**: `openai`
+   - **LLM_BASE_URL**: `https://api.openai.com/v1`
+   - **LLM_API_KEY**: Your OpenAI API key (starts with `sk-`)
+   - **LLM_CHOICE**: `gpt-4o-mini`
+   - **EMBEDDING_MODEL_CHOICE**: `text-embedding-3-small`
+   - **DATABASE_URL**: `postgresql://mem0user:mem0password@localhost:5432/mem0db`
+3. **Set Command**: `python`
+4. **Set Arguments**: `main.py`
+
+The server should start successfully and show "3 tools available" when properly configured.
+
 ### VS Code + Augment (Recommended)
 
 For the best experience with VS Code and Augment:
@@ -230,16 +248,16 @@ Add this server to your MCP configuration for Claude Desktop, Windsurf, or any o
 {
   "mcpServers": {
     "mem0": {
-      "command": "your/path/to/mcp-mem0/.venv/Scripts/python.exe",
-      "args": ["your/path/to/mcp-mem0/src/main.py"],
+      "command": "python",
+      "args": ["main.py"],
       "env": {
         "TRANSPORT": "stdio",
         "LLM_PROVIDER": "openai",
         "LLM_BASE_URL": "https://api.openai.com/v1",
-        "LLM_API_KEY": "YOUR-API-KEY",
+        "LLM_API_KEY": "sk-your-openai-api-key-here",
         "LLM_CHOICE": "gpt-4o-mini",
         "EMBEDDING_MODEL_CHOICE": "text-embedding-3-small",
-        "DATABASE_URL": "YOUR-DATABASE-URL"
+        "DATABASE_URL": "postgresql://mem0user:mem0password@localhost:5432/mem0db"
       }
     }
   }
@@ -266,10 +284,10 @@ Add this server to your MCP configuration for Claude Desktop, Windsurf, or any o
         "TRANSPORT": "stdio",
         "LLM_PROVIDER": "openai",
         "LLM_BASE_URL": "https://api.openai.com/v1",
-        "LLM_API_KEY": "YOUR-API-KEY",
+        "LLM_API_KEY": "sk-your-openai-api-key-here",
         "LLM_CHOICE": "gpt-4o-mini",
         "EMBEDDING_MODEL_CHOICE": "text-embedding-3-small",
-        "DATABASE_URL": "YOUR-DATABASE-URL"
+        "DATABASE_URL": "postgresql://mem0user:mem0password@localhost:5432/mem0db"
       }
     }
   }
