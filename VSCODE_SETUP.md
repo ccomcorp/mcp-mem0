@@ -5,23 +5,17 @@ This guide shows you how to configure the MCP Mem0 server to work with Augment i
 ## Prerequisites
 
 1. **Visual Studio Code** with **Augment extension** installed
-2. **MCP Mem0 server** running (use `start.bat` or `make start`)
+2. **MCP Mem0 server** running (use `docker-compose up` or `make start`)
 3. **OpenAI API key** configured in `.env` file
 
 ## Quick Setup
 
 ### Step 1: Start the MCP Server
 
-Run one of these commands in the mcp-mem0 directory:
+Run this command in the mcp-mem0 directory:
 
-**Windows:**
 ```bash
-start.bat
-```
-
-**Linux/Mac:**
-```bash
-./start.sh
+docker-compose up
 ```
 
 **Or using Make:**
@@ -31,25 +25,13 @@ make start
 
 ### Step 2: Configure Augment
 
-There are two ways to configure the MCP server in Augment:
+Configure the MCP server in Augment using VS Code settings:
 
-#### Option A: Using Augment Settings Panel (Recommended)
-
-1. Open VS Code with the Augment extension
-2. Click the **gear icon** in the upper right of the Augment panel
-3. In the settings panel, find the **MCP** section
-4. Click the **+** button to add a new server
-5. Fill in the configuration:
-   - **Name:** `mem0`
-   - **Command:** `curl`
-   - **Args:** `["-N", "http://localhost:8050/sse"]`
-
-#### Option B: Edit settings.json Directly
+#### Edit settings.json Directly
 
 1. In VS Code, press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac)
-2. Type "Augment: Edit Settings" and select it
-3. Under **Advanced**, click **Edit in settings.json**
-4. Add this configuration to the `mcpServers` array:
+2. Type "Preferences: Open User Settings (JSON)" and select it
+3. Add this configuration:
 
 ```json
 {
@@ -57,13 +39,15 @@ There are two ways to configure the MCP server in Augment:
     "mcpServers": [
       {
         "name": "mem0",
-        "command": "curl",
-        "args": ["-N", "http://localhost:8050/sse"]
+        "command": "python",
+        "args": ["H:\\mcp-mem0\\mcp_direct.py"]
       }
     ]
   }
 }
 ```
+
+**Note:** Replace `H:\\mcp-mem0` with the actual path to your mcp-mem0 directory.
 
 ### Step 3: Restart VS Code
 
@@ -116,19 +100,20 @@ save_memory("Team prefers functional components with hooks over class components
 ## Troubleshooting
 
 ### MCP Server Not Found
-- Ensure the MCP server is running: `make test`
-- Check the server URL: `http://localhost:8050/sse`
-- Verify Docker containers are running: `docker ps`
+- Ensure Docker is running and PostgreSQL container is up: `docker ps`
+- Test the MCP server manually: `python mcp_direct.py`
+- Verify the script path in the Augment configuration matches your actual directory
 
 ### Memory Not Saving
 - Check your OpenAI API key in `.env` file
-- View server logs: `make logs`
-- Test the server: `python test_mcp_server.py`
+- View server logs: `docker-compose logs -f`
+- Ensure PostgreSQL container is running: `docker ps | findstr postgres`
 
 ### VS Code Configuration Issues
 - Restart VS Code after configuration changes
 - Check the Augment panel for error messages
 - Verify the JSON syntax in settings.json
+- Ensure the path uses double backslashes: `H:\\mcp-mem0\\mcp_direct.py`
 
 ## Advanced Configuration
 
@@ -154,19 +139,19 @@ save_memory("PATTERN: Use async/await instead of .then() chains")
 
 ```bash
 # Start server
-make start
+docker-compose up
 
-# Stop server  
-make stop
+# Start server in background
+docker-compose up -d
+
+# Stop server
+docker-compose down
 
 # View logs
-make logs
-
-# Test functionality
-make test
+docker-compose logs -f
 
 # Clean restart
-make clean && make start
+docker-compose down && docker-compose up
 ```
 
 ## Benefits for Coding

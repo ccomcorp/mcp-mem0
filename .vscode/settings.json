@@ -1,0 +1,11 @@
+{
+    "augment.advanced": {
+        "mcpServers": [
+            {
+                "name": "mem0",
+                "command": "python",
+                "args": ["H:\\mcp-mem0\\mcp_direct.py"]
+            }
+        ]
+    }
+}

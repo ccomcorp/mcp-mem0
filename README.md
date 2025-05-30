@@ -100,7 +100,7 @@ With stdio, the MCP client iself can spin up the MCP server, so nothing to run a
 
 ### Using Docker
 
-#### Quick Start with Docker Compose (Recommended)
+#### Quick Start with Smart Startup (Recommended)
 
 The easiest way to get started is with **one command**:
 
@@ -109,9 +109,9 @@ The easiest way to get started is with **one command**:
 start.bat
 ```
 
-**Linux/Mac:**
+**Cross-platform:**
 ```bash
-./start.sh
+python start_server.py
 ```
 
 **Or using Make:**
@@ -119,13 +119,22 @@ start.bat
 make start
 ```
 
-These scripts will:
-- Create `.env` file if it doesn't exist
-- Start PostgreSQL with pgvector extension on port 5432
-- Start MCP server with SSE transport on port 8050
-- Verify everything is working
+The smart startup script will:
+- ✅ Check if Docker is running
+- ✅ Detect existing containers and reuse them
+- ✅ Only recreate containers when necessary
+- ✅ Provide clear status information
+- ✅ Test server connectivity
 
 The server will be available at `http://localhost:8050/sse`.
+
+#### Smart Startup Benefits
+
+- **🚀 Fast Restarts:** Reuses existing containers instead of recreating them
+- **🔍 Intelligent Detection:** Automatically detects running containers
+- **📊 Clear Status:** Shows exactly what's happening during startup
+- **🛡️ Safe Operation:** Won't create duplicate containers
+- **⚡ Efficient:** Only rebuilds when code or config changes
 
 **Environment Configuration**: Edit the `.env` file and add your OpenAI API key:
 ```bash
@@ -161,16 +170,16 @@ With stdio, the MCP client iself can spin up the MCP server container, so nothin
 
 For the best experience with VS Code and Augment:
 
-1. **Start the server**: Run `start.bat` (Windows) or `./start.sh` (Linux/Mac)
-2. **Configure Augment**: Add this to your Augment settings:
+1. **Start the server**: Run `docker-compose up`
+2. **Configure Augment**: Add this to your VS Code settings.json:
    ```json
    {
      "augment.advanced": {
        "mcpServers": [
          {
            "name": "mem0",
-           "command": "curl",
-           "args": ["-N", "http://localhost:8050/sse"]
+           "command": "python",
+           "args": ["path/to/your/mcp-mem0/mcp_direct.py"]
          }
        ]
      }
