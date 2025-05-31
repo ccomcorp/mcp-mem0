@@ -207,9 +207,40 @@ Once you have the server running with SSE transport, you can connect to it using
 
 Make sure to update the port if you are using a value other than the default 8050.
 
+### Claude Desktop with Docker (Recommended)
+
+Claude Desktop requires stdio transport and works best with Docker containers. Add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mem0": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network", "mcp-mem0_default",
+        "-e", "TRANSPORT=stdio",
+        "-e", "LLM_PROVIDER=openai",
+        "-e", "LLM_BASE_URL=https://api.openai.com/v1",
+        "-e", "LLM_API_KEY=YOUR-API-KEY",
+        "-e", "LLM_CHOICE=gpt-4o-mini",
+        "-e", "EMBEDDING_MODEL_CHOICE=text-embedding-3-small",
+        "-e", "DATABASE_URL=postgresql://mem0user:mem0password@postgres:5432/mem0db",
+        "mcp-mem0-mcp-mem0",
+        "uv", "run", "src/main.py"
+      ]
+    }
+  }
+}
+```
+
+See [CLAUDE_DESKTOP_SETUP.md](CLAUDE_DESKTOP_SETUP.md) for detailed setup instructions.
+
 ### Python with Stdio Configuration
 
-Add this server to your MCP configuration for Claude Desktop, Windsurf, or any other MCP client:
+For other MCP clients that support stdio transport:
 
 ```json
 {

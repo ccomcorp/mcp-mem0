@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "mem0": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--network", "mcp-mem0_default",
+        "-e", "TRANSPORT=stdio",
+        "-e", "LLM_PROVIDER=openai",
+        "-e", "LLM_BASE_URL=https://api.openai.com/v1",
+        "-e", "LLM_API_KEY=YOUR_OPENAI_API_KEY_HERE",
+        "-e", "LLM_CHOICE=gpt-4o-mini",
+        "-e", "EMBEDDING_MODEL_CHOICE=text-embedding-3-small",
+        "-e", "DATABASE_URL=postgresql://mem0user:mem0password@postgres:5432/mem0db",
+        "mcp-mem0-mcp-mem0",
+        "uv", "run", "src/main.py"
+      ]
+    }
+  }
+}
