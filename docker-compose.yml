@@ -3,6 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: pgvector/pgvector:pg15
+    restart: unless-stopped
     environment:
       POSTGRES_DB: mem0db
       POSTGRES_USER: mem0user
@@ -22,6 +23,7 @@ services:
       context: .
       args:
         PORT: 8050
+    restart: unless-stopped
     ports:
       - "8050:8050"
     environment:
